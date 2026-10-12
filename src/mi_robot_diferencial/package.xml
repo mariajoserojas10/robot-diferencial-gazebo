@@ -4,7 +4,7 @@
   <name>mi_robot_diferencial</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="maria.rojas10@.edu.co.com">maria</maintainer>
+  <maintainer email="maria.rojas10@eia.edu.co">maria</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
