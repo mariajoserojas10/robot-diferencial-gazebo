@@ -12,8 +12,8 @@
   <xacro:property name="rueda_masa" value="0.2"/>
   <xacro:property name="separacion_ruedas" value="0.25"/>
 
-  <xacro:property name="caster_radio" value="0.01"/>
-  <xacro:property name="caster_masa" value="0.02"/>
+  <xacro:property name="caster_radio" value="0.0127"/>
+  <xacro:property name="caster_masa" value="0.0185"/>
 
   <!-- ===== Fórmulas de inercia de sólidos ===== -->
   <xacro:macro name="inercia_caja" params="m x y z">
@@ -89,9 +89,16 @@
   <!-- ===== Casters: apoyos adelante y atrás para que el chasis no se incline ===== -->
   <xacro:macro name="caster" params="prefijo x">
     <link name="caster_${prefijo}">
+      
       <visual>
         <geometry><sphere radius="${caster_radio}"/></geometry>
-        <material name="gris"><color rgba="0.6 0.6 0.6 1"/></material>
+        <material name="blanco"><color rgba="0.9 0.9 0.9 1"/></material>
+      </visual>
+      
+      <visual>
+        <origin xyz="0 0 0.01" rpy="0 0 0"/>
+        <geometry><cylinder radius="0.017" length="0.02"/></geometry>
+        <material name="negro"><color rgba="0.1 0.1 0.1 1"/></material>
       </visual>
       <collision>
         <geometry><sphere radius="${caster_radio}"/></geometry>
