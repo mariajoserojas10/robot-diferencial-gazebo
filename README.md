@@ -69,4 +69,4 @@ python3 ~/ros2_ws_dif/src/mi_robot_cinematica/scripts/graficar_error.py
 
 ## Documentación
 
-Explicación del modelo, la cinemática, los parámetros y las decisiones de diseño: [enlace al Notion]
+Explicación del modelo, la cinemática, los parámetros y las decisiones de diseño: https://somber-nutria-119.notion.site/Robot-Diferencial-en-Gazebo-Entrega-1-Rob-tica-M-vil-3f7364a67f0680d2a9b3c00dd1599304?source=copy_link
