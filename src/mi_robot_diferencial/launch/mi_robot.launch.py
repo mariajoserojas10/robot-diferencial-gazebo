@@ -79,12 +79,20 @@ def lanzar(context):
         parameters=[{'use_sim_time': True}], output='screen',
     )
  
-    return [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas]
+    # 7) Mux + AEB: lleva /cmd_vel_teleop o /cmd_vel_auto a /cmd_vel pasando por el AEB
+    mux_aeb = Node(
+        package='mi_robot_control', executable='mux_aeb',
+        parameters=[{'use_sim_time': True, 'modo': context.launch_configurations['modo']}],
+        output='screen',
+    )
+ 
+    return [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb]
  
  
 def generate_launch_description():
     models_dir = os.path.join(get_package_share_directory('mi_robot_diferencial'), 'models')
     return LaunchDescription([
+        DeclareLaunchArgument('modo', default_value='teleop', description='teleop | auto'),
         DeclareLaunchArgument('pista', default_value='competencia',
                               description='competencia | propia'),
         # Para que Gazebo encuentre model://pista_competencia
