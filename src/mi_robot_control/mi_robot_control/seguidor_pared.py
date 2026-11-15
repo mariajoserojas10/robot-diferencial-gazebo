@@ -38,9 +38,9 @@ class SeguidorPared(Node):
     def __init__(self):
         super().__init__('seguidor_pared')
         p = self.declare_parameter
-        self.kp = p('kp', 4.0).value
+        self.kp = p('kp', 6.0).value
         self.ki = p('ki', 0.0).value
-        self.kd = p('kd', 0.5).value
+        self.kd = p('kd', 1.0).value
         self.theta = math.radians(p('theta_deg', 45.0).value)
         self.l = p('l', 0.30).value
         self.centrar = p('centrar', True).value

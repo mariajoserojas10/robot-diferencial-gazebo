@@ -93,7 +93,23 @@ class MuxAEB(Node):
         dy = self.medio_ancho / s if s > 1e-6 else math.inf
         return min(dx, dy)
  
-    def ttc_minimo(self, v):
+    def en_franja(self, r, th, v, w):
+        """¿El punto del rayo cae en la franja que barre el robot en su trayectoria?
+        Recto (w ~ 0): |y| <= A/2 + margen.  Curva: arco de radio R = v/w alrededor
+        del centro de giro, con el mismo ancho. Solo cuenta lo que está delante."""
+        x, y = r * math.cos(th), r * math.sin(th)
+        if x * math.copysign(1.0, v) < self.medio_largo:
+            return False
+        ancho = self.medio_ancho + self.margen_lat
+        if abs(w) < 0.05:
+            return abs(y) <= ancho
+        R = v / w
+        if abs(math.hypot(x, y - R) - abs(R)) > ancho:
+            return False
+        phi = math.atan2(R * x, -R * (y - R)) * math.copysign(1.0, w) * math.copysign(1.0, v)
+        return 0.0 < phi < math.pi / 2
+
+    def ttc_minimo(self, v, w):
         """min_i TTC_i para la velocidad v."""
         if self.scan is None or abs(v) < 1e-3:
             return math.inf
@@ -103,7 +119,7 @@ class MuxAEB(Node):
             if not math.isfinite(r) or r < sc.range_min:
                 continue
             th = sc.angle_min + i * sc.angle_increment
-            if abs(r * math.sin(th)) > self.medio_ancho + self.margen_lat:
+            if not self.en_franja(r, th, v, w):
                 continue
             r_dot = -v * math.cos(th)
             if r_dot >= 0.0:
@@ -123,7 +139,7 @@ class MuxAEB(Node):
         v = out.linear.x if abs(out.linear.x) > abs(self.v_odom) else self.v_odom
         if out.linear.x * self.v_odom < 0:
             v = out.linear.x
-        ttc = self.ttc_minimo(v)
+        ttc = self.ttc_minimo(v, out.angular.z)
         umbral = self.t_reac + abs(v) / (2.0 * self.a_fren)
  
         frenar = self.aeb_on and ttc < umbral
