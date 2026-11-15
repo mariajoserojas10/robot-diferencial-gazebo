@@ -165,7 +165,8 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        nodo.pub_cmd.publish(Twist())
+        if rclpy.ok():
+            nodo.pub_cmd.publish(Twist())
         nodo.destroy_node()
         rclpy.try_shutdown()
  

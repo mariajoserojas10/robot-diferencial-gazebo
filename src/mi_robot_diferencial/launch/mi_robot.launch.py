@@ -86,7 +86,13 @@ def lanzar(context):
         output='screen',
     )
  
-    nodos = [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb]
+    # 7b) Cronómetro de vueltas y error de cierre (pose estimada vs pose real)
+    vueltas = Node(
+        package='mi_robot_cinematica', executable='vueltas',
+        parameters=[{'use_sim_time': True}], output='screen',
+    )
+
+    nodos = [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb, vueltas]
 
     # 8) Modo autónomo: seguimiento de pared -> /cmd_vel_auto
     if context.launch_configurations['modo'] == 'auto':

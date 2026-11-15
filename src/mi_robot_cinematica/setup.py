@@ -24,7 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'odom_ruedas = mi_robot_cinematica.odom_ruedas:main'
+            'odom_ruedas = mi_robot_cinematica.odom_ruedas:main',
+            'vueltas = mi_robot_cinematica.vueltas:main'
         ],
     },
 )

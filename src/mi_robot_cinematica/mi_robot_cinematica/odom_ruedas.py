@@ -30,8 +30,8 @@ from nav_msgs.msg import Odometry
 from std_msgs.msg import Float64MultiArray
 
 # ===== Parámetros físicos (deben coincidir con el xacro) =====
-R = 0.05    # rueda_radio [m]
-L = 0.25    # separacion_ruedas [m]
+R = 0.0245  # rueda_radio [m] (MicroROS, diámetro 49 mm)
+L = 0.181   # vía EFECTIVA calibrada (skid-steer). Geométrica: 0.134 m
 
 # ===== Matriz M: de velocidades de rueda a velocidades del robot =====
 M = np.array([[R / 2.0,  R / 2.0],
@@ -73,14 +73,17 @@ class OdomRuedas(Node):
 
     # ---------- 1) Leer w de /joint_states e integrar q ----------
     def cb_ruedas(self, msg):
-        if 'joint_rueda_der' not in msg.name or 'joint_rueda_izq' not in msg.name:
+        # Skid-steer: wD y wI = promedio de las dos ruedas de cada lado
+        der = ('joint_rueda_del_der', 'joint_rueda_tra_der')
+        izq = ('joint_rueda_del_izq', 'joint_rueda_tra_izq')
+        if not all(j in msg.name for j in der + izq):
             return
         if len(msg.velocity) < len(msg.name):
             return
-
-        iD = msg.name.index('joint_rueda_der')
-        iI = msg.name.index('joint_rueda_izq')
-        w = np.array([msg.velocity[iD], msg.velocity[iI]])   # w = [wD, wI]
+        vel = dict(zip(msg.name, msg.velocity))
+        wD = (vel[der[0]] + vel[der[1]]) / 2.0
+        wI = (vel[izq[0]] + vel[izq[1]]) / 2.0
+        w = np.array([wD, wI])                               # w = [wD, wI]
 
         t = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
         if self.t_ant is None:
