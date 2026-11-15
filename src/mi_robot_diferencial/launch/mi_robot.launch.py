@@ -86,13 +86,24 @@ def lanzar(context):
         output='screen',
     )
  
-    return [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb]
+    nodos = [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb]
+
+    # 8) Modo autónomo: seguimiento de pared -> /cmd_vel_auto
+    if context.launch_configurations['modo'] == 'auto':
+        nodos.append(Node(
+            package='mi_robot_control', executable='seguidor_pared',
+            parameters=[{'use_sim_time': True,
+                         'v_max': float(context.launch_configurations['v_max'])}],
+            output='screen',
+        ))
+    return nodos
  
  
 def generate_launch_description():
     models_dir = os.path.join(get_package_share_directory('mi_robot_diferencial'), 'models')
     return LaunchDescription([
         DeclareLaunchArgument('modo', default_value='teleop', description='teleop | auto'),
+        DeclareLaunchArgument('v_max', default_value='1.0', description='velocidad máxima del modo auto [m/s]'),
         DeclareLaunchArgument('pista', default_value='competencia',
                               description='competencia | propia'),
         # Para que Gazebo encuentre model://pista_competencia
