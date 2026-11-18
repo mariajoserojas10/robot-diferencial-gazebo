@@ -19,7 +19,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 # ===== Pistas disponibles: archivo del world y punto de spawn (x, y, yaw) =====
 PISTAS = {
     'competencia': {'world': 'pista_competencia.sdf', 'spawn': (-0.60, 0.0, 0.0)},
-    'propia':      {'world': 'pista.sdf',             'spawn': (-2.60, -2.4, 0.0)},  # se reemplaza en el Paso 8
+    'propia':      {'world': 'pista_propia.sdf', 'spawn': (-0.60, 0.0, 0.0)},
 }
  
  
@@ -89,7 +89,7 @@ def lanzar(context):
     # 7b) Cronómetro de vueltas y error de cierre (pose estimada vs pose real)
     vueltas = Node(
         package='mi_robot_cinematica', executable='vueltas',
-        parameters=[{'use_sim_time': True}], output='screen',
+        parameters=[{'use_sim_time': True, 'separacion_ruedas': 0.181}], output='screen',
     )
 
     nodos = [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb, vueltas]
