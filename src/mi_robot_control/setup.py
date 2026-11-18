@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             'mux_aeb = mi_robot_control.mux_aeb:main',
+            'control_ps = mi_robot_control.control_ps:main',
             'seguidor_pared = mi_robot_control.seguidor_pared:main',
         ],
     },

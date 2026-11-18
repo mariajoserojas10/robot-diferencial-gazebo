@@ -1,0 +1,17 @@
+# Control PS5 (DualSense) - manejo tipo videojuego
+# R2 = acelerar (proporcional), L2 = frenar/reversa, stick izquierdo = girar
+# Ejes: 0 stick izq X | 1 stick izq Y | 2 L2 | 3 stick der X | 4 stick der Y | 5 R2
+joy_node:
+  ros__parameters:
+    deadzone: 0.05
+    autorepeat_rate: 20.0
+
+control_ps:
+  ros__parameters:
+    eje_r2: 5          # R2 = acelerar
+    eje_l2: 2          # L2 = frenar / reversa
+    eje_giro: 0        # stick izquierdo X = girar
+    boton_turbo: -1    # sin turbo: R2 a fondo = velocidad máxima
+    v_normal: 1.0      # R2 a fondo [m/s] (límite del robot)
+    w_normal: 3.0      # stick al fondo [rad/s] (límite 4.0)
+    expo: 1.6          # curva del stick: >1 = más fino cerca del centro

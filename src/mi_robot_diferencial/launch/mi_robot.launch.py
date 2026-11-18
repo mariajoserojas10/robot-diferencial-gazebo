@@ -94,6 +94,21 @@ def lanzar(context):
 
     nodos = [gazebo, robot_state_publisher, spawn, bridge, rviz, odom_ruedas, mux_aeb, vueltas]
 
+    # 9) Modo teleoperado -> /cmd_vel_teleop
+    if context.launch_configurations['modo'] == 'teleop':
+        if context.launch_configurations['control'] == 'ps':
+            joy_cfg = os.path.join(pkg, 'config', 'joy_ps5.yaml')
+            nodos.append(Node(package='joy', executable='joy_node',
+                              parameters=[joy_cfg, {'use_sim_time': True}]))
+            nodos.append(Node(package='mi_robot_control', executable='control_ps',
+                              parameters=[joy_cfg, {'use_sim_time': True}]))
+        else:
+            # El teclado necesita su propia ventana para leer las teclas
+            nodos.append(Node(package='teleop_twist_keyboard', executable='teleop_twist_keyboard',
+                              prefix='xterm -fa Monospace -fs 12 -e',
+                              parameters=[{'speed': 0.5, 'turn': 1.5}],
+                              remappings=[('/cmd_vel', '/cmd_vel_teleop')]))
+
     # 8) Modo autónomo: seguimiento de pared -> /cmd_vel_auto
     if context.launch_configurations['modo'] == 'auto':
         nodos.append(Node(
@@ -110,6 +125,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('modo', default_value='teleop', description='teleop | auto'),
         DeclareLaunchArgument('v_max', default_value='1.0', description='velocidad máxima del modo auto [m/s]'),
+        DeclareLaunchArgument('control', default_value='ps', description='ps | teclado (solo en modo teleop)'),
         DeclareLaunchArgument('pista', default_value='competencia',
                               description='competencia | propia'),
         # Para que Gazebo encuentre model://pista_competencia
