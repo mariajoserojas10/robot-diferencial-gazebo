@@ -106,7 +106,7 @@ def lanzar(context):
             # El teclado necesita su propia ventana para leer las teclas
             nodos.append(Node(package='teleop_twist_keyboard', executable='teleop_twist_keyboard',
                               prefix='xterm -fa Monospace -fs 12 -e',
-                              parameters=[{'speed': 0.5, 'turn': 1.5}],
+                              parameters=[{'speed': 1.0, 'turn': 2.0}],
                               remappings=[('/cmd_vel', '/cmd_vel_teleop')]))
 
     # 10) Obstáculo para demostrar el AEB (caja en la recta principal, a 3 m de la salida)
