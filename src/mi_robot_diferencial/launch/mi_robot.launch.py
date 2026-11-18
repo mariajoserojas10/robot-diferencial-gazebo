@@ -109,6 +109,17 @@ def lanzar(context):
                               parameters=[{'speed': 0.5, 'turn': 1.5}],
                               remappings=[('/cmd_vel', '/cmd_vel_teleop')]))
 
+    # 10) Obstáculo para demostrar el AEB (caja en la recta principal, a 3 m de la salida)
+    if context.launch_configurations['obstaculo'] == 'true':
+        caja = ('<sdf version="1.9"><model name="obstaculo"><static>true</static><link name="l">'
+                '<collision name="c"><geometry><box><size>0.2 0.2 0.3</size></box></geometry></collision>'
+                '<visual name="v"><geometry><box><size>0.2 0.2 0.3</size></box></geometry>'
+                '<material><ambient>1 0.5 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material></visual>'
+                '</link></model></sdf>')
+        nodos.append(Node(package='ros_gz_sim', executable='create', output='screen',
+                          arguments=['-name', 'obstaculo', '-string', caja,
+                                     '-x', '3.0', '-y', '0.0', '-z', '0.15']))
+
     # 8) Modo autónomo: seguimiento de pared -> /cmd_vel_auto
     if context.launch_configurations['modo'] == 'auto':
         nodos.append(Node(
@@ -126,6 +137,7 @@ def generate_launch_description():
         DeclareLaunchArgument('modo', default_value='teleop', description='teleop | auto'),
         DeclareLaunchArgument('v_max', default_value='1.0', description='velocidad máxima del modo auto [m/s]'),
         DeclareLaunchArgument('control', default_value='ps', description='ps | teclado (solo en modo teleop)'),
+        DeclareLaunchArgument('obstaculo', default_value='false', description='true = caja en la recta para probar el AEB'),
         DeclareLaunchArgument('pista', default_value='competencia',
                               description='competencia | propia'),
         # Para que Gazebo encuentre model://pista_competencia

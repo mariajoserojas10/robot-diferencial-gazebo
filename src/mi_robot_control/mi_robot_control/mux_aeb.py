@@ -106,7 +106,7 @@ class MuxAEB(Node):
         R = v / w
         if abs(math.hypot(x, y - R) - abs(R)) > ancho:
             return False
-        phi = math.atan2(R * x, -R * (y - R)) * math.copysign(1.0, w) * math.copysign(1.0, v)
+        phi = math.atan2(R * x, -R * (y - R)) * math.copysign(1.0, w)
         return 0.0 < phi < math.pi / 2
 
     def ttc_minimo(self, v, w):
